@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Proyecto web</title>
+</head>
+</html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+<h1>Revisa tu presupuesto</h1>
+<p>En esta página podrás revisar tu presupuesto y hacer un balance tus gastos dentro de un
+    periodo de tiempo. Además, podrás generar una gráfica de tus movimientos financieros,
+    la cual te permitirá evaluar si debes modificar
+    tus transacciones</p>
+
+<button id="ingresos">Ingresos</button>
+<input type="number" id="inputIngresos" placeholder="Ingresos">
+
+<br /><br />
+
+<button id="egresos">Egresos</button>
+<input type="number" id="inputEgresos" placeholder="Egresos">
+
+<br /><br />
+
+<label for="fechaInicio">Desde:</label>
+<input type="date" id="fechaInicio" name="fechaInicio" />
+
+<label for="fechaFin">A:</label>
+<input type="date" id="fechaFin" name="fechaFin"/>
+
+<br /><br/>
+
+<button id="graficar">Generar gráfica</button>
+
+</body>
+</html>
