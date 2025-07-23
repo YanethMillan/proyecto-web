@@ -1,38 +1,45 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <link rel="stylesheet" href="css/estilos.css" />
     <meta charset="UTF-8" />
     <title>Proyecto web</title>
 </head>
-</html>
-<html xmlns:th="http://www.thymeleaf.org">
-
 <body>
+
 <h1>Revisa tu presupuesto</h1>
-<p>En esta página podrás revisar tu presupuesto y hacer un balance tus gastos dentro de un
-    periodo de tiempo. Además, podrás generar una gráfica de tus movimientos financieros,
-    la cual te permitirá evaluar si debes modificar
-    tus transacciones</p>
+<p>
+    En esta página podrás revisar tu presupuesto y hacer un balance de tus gastos.
+    Además, podrás generar una gráfica de tus movimientos financieros
+    para evaluar si debes modificar tus transacciones.
+</p>
 
-<button id="ingresos">Ingresos</button>
-<input type="number" id="inputIngresos" placeholder="Ingresos">
-
-<br /><br />
-
-<button id="egresos">Egresos</button>
-<input type="number" id="inputEgresos" placeholder="Egresos">
+<button id="ingresos">Añadir ingreso</button>
+<input type="number" id="inputIngresos" placeholder="Registra tu ingreso" />
+<p id="ingresoMostrado"></p>
 
 <br /><br />
 
-<label for="fechaInicio">Desde:</label>
-<input type="date" id="fechaInicio" name="fechaInicio" />
+<button id="egresos">Añadir campo de egreso</button>
+<button id="eliminarEgreso">Eliminar último campo de egreso</button>
+<div id="egresosContainer">
+    <input type="number" class="inputEgresos" placeholder="Egreso: Descripción" />
+</div>
 
-<label for="fechaFin">A:</label>
-<input type="date" id="fechaFin" name="fechaFin"/>
+<br /><br />
 
-<br /><br/>
+<button id="sumar">Sumar egresos</button>
+<p id="resultadoTotal"></p>
+
+<br /><br />
 
 <button id="graficar">Generar gráfica</button>
+<br /><br/>
+<canvas id="graficaPastel" width="400" height="400"></canvas>
+
+<script th:src="@{/js/script.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 
 </body>
 </html>
