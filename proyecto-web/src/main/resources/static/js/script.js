@@ -10,6 +10,12 @@ document.getElementById('ingresos').onclick = function() {
     document.getElementById('inputIngresos').value = '';
 };
 
+document.getElementById('eliminarIngreso').onclick = function() {
+    ingresosTotales = 0;
+    document.getElementById('ingresoMostrado').textContent = '';
+    document.getElementById('inputIngresos').value = '';
+};
+
 document.getElementById('egresos').onclick = function() {
     var container = document.getElementById('egresosContainer');
 
