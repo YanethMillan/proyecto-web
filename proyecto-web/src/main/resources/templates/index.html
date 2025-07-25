@@ -1,48 +1,98 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <link rel="stylesheet" href="css/estilos.css" />
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description"
+          content="Página para controlar egresos por periodos y visualizar un balance financiero con gráficas."/>
     <title>Proyecto web</title>
+    <link rel="stylesheet" href="css/estilos.css"/>
 </head>
+
 <body>
 
-<h1>Revisa tu presupuesto</h1>
-<p>
-    En esta página podrás revisar tu presupuesto y hacer un balance de tus gastos.
-    Además, podrás generar una gráfica de tus movimientos financieros
-    para evaluar si debes modificar tus transacciones.
-</p>
+<header>
+    <h1>Haz seguimiento de tus egresos, guárdalos y analízalos por periodos</h1>
+    <p>
+        Usa esta herramienta para registrar tus ingresos y egresos, seleccionar un periodo específico, calcular tu
+        balance financiero y
+        visualizar los resultados con una gráfica clara y detallada. Guarda tu información localmente y haz un
+        seguimiento de tus finanzas
+        personales de forma sencilla y efectiva.
+    </p>
+</header>
 
-<button id="ingresos">Añadir ingreso</button>
-<button id="eliminarIngreso">Eliminar ingreso</button>
-<div>
-    <input type="number" id="inputIngresos" placeholder="Registra tu ingreso" />
-</div>
-<p id="ingresoMostrado"></p>
+<section aria-labelledby="tituloIngresos">
+    <h2 id="tituloIngresos">Registro de Ingresos</h2>
+    <div class="botones-grupo">
+        <button id="ingresos">Añadir ingreso</button>
+        <button id="eliminarIngreso">Eliminar ingreso</button>
+    </div>
 
-<br /><br />
+    <p id="mensajeGuardadoIngresos" style="color: green; display: none;">✔ Datos guardados correctamente</p>
 
-<button id="egresos">Añadir campo de egreso</button>
-<button id="eliminarEgreso">Eliminar último campo de egreso</button>
-<div id="egresosContainer">
-    <input type="number" class="inputEgresos" placeholder="Egreso: Descripción" />
-</div>
+    <div>
+        <label for="inputIngresos">Monto del ingreso:</label>
+        <div>
+            <input type="number" id="inputIngresos" placeholder="Registra tu ingreso"/>
+        </div>
+    </div>
+    <p id="ingresoMostrado"></p>
+</section>
 
-<br /><br />
+<section aria-labelledby="tituloEgresos">
+    <h2 id="tituloEgresos">Registro de Egresos</h2>
 
-<button id="sumar">Sumar egresos</button>
-<p id="resultadoTotal"></p>
+    <h3>Selecciona el periodo de tu balance</h3>
+    <div class="fechas-balance">
+        <label for="fechaInicio">Desde:</label>
+        <input type="date" id="fechaInicio"/>
+        <label for="fechaFin">Hasta:</label>
+        <input type="date" id="fechaFin"/>
+    </div>
 
-<br /><br />
+    <div class="botones-grupo">
+        <button id="egresos">Añadir campo de egreso</button>
+        <button id="eliminarEgreso">Eliminar último campo de egreso</button>
+    </div>
 
-<button id="graficar">Generar gráfica</button>
-<br /><br/>
-<canvas id="graficaPastel" width="400" height="400"></canvas>
+    <p id="mensajeGuardadoEgresos" style="color: green; display: none;">✔ Datos guardados correctamente</p>
+
+    <div>
+        <label for="descripcionEgresoInicial">Descripción del egreso:</label>
+        <div>
+            <input type="text" id="descripcionEgresoInicial" class="descripcionEgreso" placeholder="Ej. Renta"/>
+        </div>
+    </div>
+
+    <div>
+        <label for="montoEgresoInicial">Monto del egreso:</label>
+        <div>
+            <input type="number" id="montoEgresoInicial" class="montoEgreso" placeholder="Monto del egreso"/>
+        </div>
+    </div>
+
+    <div id="egresosContainer"></div>
+
+    <button id="sumar">Sumar egresos</button>
+    <p id="resultadoTotal"></p>
+
+    <button id="verTodo">Ver historial completo de egresos</button>
+    <div id="historialEgresos"></div>
+</section>
+
+<section aria-labelledby="tituloGrafica">
+    <h2 id="tituloGrafica">Gráfica de tu balance</h2>
+    <button id="graficar">Generar gráfica</button>
+    <canvas id="graficaPastel" width="400" height="400"></canvas>
+</section>
+
+<footer style="text-align: center; margin-top: 40px; font-size: 0.9em; color: #777;">
+    Proyecto de finanzas personales | &copy; 2025
+</footer>
 
 <script th:src="@{/js/script.js}"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-
 </body>
 </html>

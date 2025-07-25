@@ -1,3 +1,4 @@
+
 var ingresosTotales = 0;
 var egresosTotales = 0;
 var miGrafica = null;
@@ -5,9 +6,16 @@ var miGrafica = null;
 document.getElementById('ingresos').onclick = function() {
     var ingreso = parseFloat(document.getElementById('inputIngresos').value);
 
+    if (isNaN(ingreso) || ingreso <= 0) {
+        alert("Por favor, introduce un ingreso válido.");
+        return;
+    }
+
     ingresosTotales = ingreso;
     document.getElementById('ingresoMostrado').textContent = 'Tu ingreso total es: $' + ingresosTotales.toFixed(2);
     document.getElementById('inputIngresos').value = '';
+
+    mostrarMensajeGuardado('mensajeGuardadoIngresos');
 };
 
 document.getElementById('eliminarIngreso').onclick = function() {
@@ -16,22 +24,46 @@ document.getElementById('eliminarIngreso').onclick = function() {
     document.getElementById('inputIngresos').value = '';
 };
 
+var fechaInicio = '';
+var fechaFin = '';
+
+document.getElementById('fechaInicio').addEventListener('change', function() {
+    fechaInicio = this.value;
+    console.log("Fecha de inicio seleccionada:", fechaInicio);
+});
+
+document.getElementById('fechaFin').addEventListener('change', function() {
+    fechaFin = this.value;
+    console.log("Fecha de fin seleccionada:", fechaFin);
+});
+
 document.getElementById('egresos').onclick = function() {
     var container = document.getElementById('egresosContainer');
 
-    container.appendChild(document.createElement('br'));
+    var grupo = document.createElement('div');
+    grupo.className = 'grupo-egreso';
 
-    var descripcionInput = document.createElement('input');
-    descripcionInput.type = 'text';
-    descripcionInput.className = 'descripcionEgreso';
-    descripcionInput.placeholder = 'Descripción (ej. Renta)';
-    container.appendChild(descripcionInput);
+    var labelDesc = document.createElement('label');
+    labelDesc.textContent = 'Descripción del egreso:';
+    grupo.appendChild(labelDesc);
 
-    var montoInput = document.createElement('input');
-    montoInput.type = 'number';
-    montoInput.className = 'montoEgreso';
-    montoInput.placeholder = 'Monto';
-    container.appendChild(montoInput);
+    var inputDesc = document.createElement('input');
+    inputDesc.type = 'text';
+    inputDesc.className = 'descripcionEgreso';
+    inputDesc.placeholder = 'Ej. Servicios';
+    grupo.appendChild(inputDesc);
+
+    var labelMonto = document.createElement('label');
+    labelMonto.textContent = 'Monto del egreso:';
+    grupo.appendChild(labelMonto);
+
+    var inputMonto = document.createElement('input');
+    inputMonto.type = 'number';
+    inputMonto.className = 'montoEgreso';
+    inputMonto.placeholder = 'Monto';
+    grupo.appendChild(inputMonto);
+
+    container.appendChild(grupo);
 };
 
 document.getElementById('eliminarEgreso').onclick = function() {
@@ -46,11 +78,28 @@ document.getElementById('eliminarEgreso').onclick = function() {
 };
 
 document.getElementById('sumar').onclick = function() {
+    if (!fechaInicio || !fechaFin) {
+        alert("Selecciona un rango de fechas antes de registrar los egresos.");
+        return;
+    }
+
+    var descripciones = document.getElementsByClassName('descripcionEgreso');
     var montos = document.getElementsByClassName('montoEgreso');
     egresosTotales = 0;
 
+    var egresos = [];
+
     for (var i = 0; i < montos.length; i++) {
-        egresosTotales += parseFloat(montos[i].value);
+        var descripcion = descripciones[i].value || 'Egreso ' + (i + 1);
+        var monto = parseFloat(montos[i].value);
+
+        if (isNaN(monto) || monto <= 0) continue;
+
+        egresosTotales += monto;
+        egresos.push({
+            descripcion: descripcion,
+            monto: monto
+        });
     }
 
     var saldo = ingresosTotales - egresosTotales;
@@ -59,11 +108,70 @@ document.getElementById('sumar').onclick = function() {
         'Ingresos Totales: $' + ingresosTotales.toFixed(2) + ' | ' +
         'Egresos Totales: $' + egresosTotales.toFixed(2) + ' | ' +
         'Saldo: $' + saldo.toFixed(2);
+
+    var egresosData = {
+        tipo: "egresos",
+        total: egresosTotales,
+        detalle: egresos,
+        fechaInicio: fechaInicio,
+        fechaFin: fechaFin
+    };
+
+    var clave = "balance_" + fechaInicio + "_" + fechaFin + "_egresos";
+
+    localStorage.setItem(clave, JSON.stringify(egresosData));
+
+    mostrarMensajeGuardado('mensajeGuardadoEgresos');
+
+    console.log("Egresos guardados en localStorage:", egresosData);
+};
+
+function mostrarMensajeGuardado(idMensaje) {
+    const mensaje = document.getElementById(idMensaje);
+    if (!mensaje) return;
+    mensaje.style.display = 'block';
+    setTimeout(() => {
+        mensaje.style.display = 'none';
+    }, 2000);
+}
+
+document.getElementById('verTodo').onclick = function() {
+    var historialDiv = document.getElementById('historialEgresos');
+    historialDiv.innerHTML = '';
+
+    var encontrado = false;
+
+    for (var i = 0; i < localStorage.length; i++) {
+        var clave = localStorage.key(i);
+        if (clave.indexOf('balance_') === 0 && clave.lastIndexOf('_egresos') === clave.length - 8) {
+            var datos = JSON.parse(localStorage.getItem(clave));
+            if (datos && datos.detalle && datos.detalle.length > 0) {
+                encontrado = true;
+                var periodo = clave.replace('balance_', '').replace('_egresos', '').replace(/_/g, ' a ');
+                var lista = '<ul>';
+                for (var j = 0; j < datos.detalle.length; j++) {
+                    var desc = datos.detalle[j].descripcion;
+                    var monto = datos.detalle[j].monto.toFixed(2);
+                    lista += '<li>' + desc + ' - $' + monto + '</li>';
+                }
+                lista += '</ul>';
+                historialDiv.innerHTML += '<h4>Periodo: ' + periodo + '</h4>' + lista;
+            }
+        }
+    }
+    if (!encontrado) {
+        historialDiv.innerHTML = '<p>No hay egresos registrados aún.</p>';
+    }
 };
 
 document.getElementById('graficar').onclick = function() {
     var descripciones = document.getElementsByClassName('descripcionEgreso');
     var montos = document.getElementsByClassName('montoEgreso');
+
+    if (montos.length === 0) {
+        alert("No hay egresos registrados para graficar.");
+        return;
+    }
 
     var labels = [];
     var data = [];
@@ -72,7 +180,9 @@ document.getElementById('graficar').onclick = function() {
         var descripcion = descripciones[i].value || 'Egreso ' + (i + 1);
         var monto = parseFloat(montos[i].value);
 
-        labels.push(descripcion + ': $' + monto);
+        if (isNaN(monto) || monto <= 0) continue;
+
+        labels.push(descripcion);
         data.push(monto);
     }
 
@@ -101,9 +211,7 @@ document.getElementById('graficar').onclick = function() {
                 tooltip: {
                     callbacks: {
                         label: function(context) {
-                            var label = context.label || '';
-                            var value = context.parsed || 0;
-                            return label + ' - $' + value;
+                            return context.label + ' - $' + context.parsed.toFixed(2);
                         }
                     }
                 }
@@ -111,4 +219,3 @@ document.getElementById('graficar').onclick = function() {
         }
     });
 };
-
