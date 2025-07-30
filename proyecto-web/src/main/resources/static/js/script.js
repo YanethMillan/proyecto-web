@@ -38,43 +38,49 @@ document.getElementById('fechaFin').addEventListener('change', function() {
 });
 
 document.getElementById('egresos').onclick = function() {
-    var container = document.getElementById('egresosContainer');
+    var zonaEgresos = document.getElementById('camposDinamicosEgresos');
 
-    var grupo = document.createElement('div');
-    grupo.className = 'grupo-egreso';
+    var bloque = document.createElement('div');
+    bloque.className = 'bloque-egreso';
 
     var labelDesc = document.createElement('label');
     labelDesc.textContent = 'Descripción del egreso:';
-    grupo.appendChild(labelDesc);
+    bloque.appendChild(labelDesc);
 
-    var inputDesc = document.createElement('input');
-    inputDesc.type = 'text';
-    inputDesc.className = 'descripcionEgreso';
-    inputDesc.placeholder = 'Ej. Servicios';
-    grupo.appendChild(inputDesc);
+    bloque.appendChild(document.createElement('br'));
+
+    var descripcionInput = document.createElement('input');
+    descripcionInput.type = 'text';
+    descripcionInput.className = 'descripcionEgreso';
+    descripcionInput.placeholder = 'Descripción (ej. Renta)';
+    bloque.appendChild(descripcionInput);
+
+    bloque.appendChild(document.createElement('br'));
 
     var labelMonto = document.createElement('label');
     labelMonto.textContent = 'Monto del egreso:';
-    grupo.appendChild(labelMonto);
+    bloque.appendChild(labelMonto);
 
-    var inputMonto = document.createElement('input');
-    inputMonto.type = 'number';
-    inputMonto.className = 'montoEgreso';
-    inputMonto.placeholder = 'Monto';
-    grupo.appendChild(inputMonto);
+    bloque.appendChild(document.createElement('br'));
 
-    container.appendChild(grupo);
+    var montoInput = document.createElement('input');
+    montoInput.type = 'number';
+    montoInput.className = 'montoEgreso';
+    montoInput.placeholder = 'Monto';
+    bloque.appendChild(montoInput);
+
+    bloque.appendChild(document.createElement('hr'));
+
+    zonaEgresos.appendChild(bloque);
 };
 
 document.getElementById('eliminarEgreso').onclick = function() {
-    var container = document.getElementById('egresosContainer');
-    var descripciones = container.getElementsByClassName('descripcionEgreso');
-    var montos = container.getElementsByClassName('montoEgreso');
-    var brs = container.getElementsByTagName('br');
+    var zonaEgresos = document.getElementById('camposDinamicosEgresos');
+    var bloques = zonaEgresos.getElementsByClassName('bloque-egreso');
 
-    container.removeChild(descripciones[descripciones.length - 1]);
-    container.removeChild(montos[montos.length - 1]);
-    container.removeChild(brs[brs.length - 1]);
+    if (bloques.length) {
+        zonaEgresos.removeChild(bloques[bloques.length - 1]);
+    }
 };
 
 document.getElementById('sumar').onclick = function() {
@@ -219,3 +225,4 @@ document.getElementById('graficar').onclick = function() {
         }
     });
 };
+

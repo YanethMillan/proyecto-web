@@ -16,6 +16,12 @@ h1 {
   margin-bottom: 20px;
 }
 
+hr {
+  border: none;
+  height: 0;
+  margin: 0;
+}
+
 p {
   text-align: center;
   font-size: 1.1em;
